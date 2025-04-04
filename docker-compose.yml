@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: ./backend
+      context: ./MobilePortal
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
@@ -9,20 +9,20 @@ services:
     depends_on:
       - db
     env_file:
-      - ./backend/.env
+      - ./MobilePortal/.env
     volumes:
       - storage:/usr/share/nginx/html/storage:rw
       - public:/usr/share/nginx/html/public:rw
   queue-worker:
     build:
-      context: ./backend
+      context: ./MobilePortal
       dockerfile: Dockerfile
     restart: unless-stopped
     command: php artisan queue:work
     environment:
       IS_WORKER: "true"
     env_file:
-      - ./backend/.env
+      - ./MobilePortal/.env
     depends_on:
       - db
       - redis
@@ -32,7 +32,7 @@ services:
   nginx:
     image: nginx:1-alpine
     ports:
-      - 80:80
+      - 8080:80
       - 443:443
     volumes:
       - ./nginx.conf:/etc/nginx/templates/default.conf.template
